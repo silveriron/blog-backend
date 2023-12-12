@@ -56,7 +56,7 @@ class AuthServiceTest {
     @Test
     fun `signup throws exception when email is already taken`() {
 
-        val signupReq = SignupReq(email = "test@test.com", password =  "Test User",  name = "password", image = null)
+        val signupReq = SignupReq(email = "test@test.com", password =  "Test User",  username = "password", image = null)
 
         `when`(passwordEncoder.encode(signupReq.password)).thenReturn("password")
 
