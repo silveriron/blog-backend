@@ -31,14 +31,14 @@ class AuthServiceTest {
     fun `signup creates new user when email is not taken`() {
 
         val signupReq = SignupReq(
-            email = "test@test.com", name="Test User", password =  "password", image = null)
+            email = "test@test.com", username="Test User", password =  "password", image = null)
 
         `when`(passwordEncoder.encode(signupReq.password)).thenReturn("password")
 
         val user = User(
             email = signupReq.email,
             password = passwordEncoder.encode(signupReq.password),
-            name = signupReq.name,
+            username = signupReq.username,
             image = signupReq.image,
             role = UserRole.ROLE_USER,
             status = UserStatus.UNVERIFIED,
@@ -63,7 +63,7 @@ class AuthServiceTest {
         val user = User(
             email = signupReq.email,
             password = passwordEncoder.encode(signupReq.password),
-            name = signupReq.name,
+            username = signupReq.username,
             role = UserRole.ROLE_USER,
             status = UserStatus.UNVERIFIED,
             provider = AuthProvider.LOCAL

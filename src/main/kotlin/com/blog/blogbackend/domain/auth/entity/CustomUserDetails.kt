@@ -13,12 +13,16 @@ class CustomUserDetails(
         return authorities
     }
 
+    fun getId(): Long {
+        return user.id
+    }
+
     override fun getPassword(): String {
         return user.password
     }
 
     override fun getUsername(): String {
-        return user.name
+        return user.username
     }
 
     override fun isAccountNonExpired(): Boolean {
