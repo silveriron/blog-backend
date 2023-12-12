@@ -52,4 +52,12 @@ class TokenService(
 
         return jwt.payload.subject
     }
+
+    fun createAccessToken(userId: Long): String {
+        return Jwts.builder()
+            .subject(userId.toString())
+            .signWith(key)
+            .expiration(Date(System.currentTimeMillis() + accessExpiration * 1000))
+            .compact()
+    }
 }

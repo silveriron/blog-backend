@@ -2,10 +2,12 @@ package com.blog.blogbackend.domain.auth.controller
 
 import com.blog.blogbackend.domain.auth.dto.LoginReq
 import com.blog.blogbackend.domain.auth.dto.SignupReq
+import com.blog.blogbackend.domain.auth.entity.CustomUserDetails
 import com.blog.blogbackend.domain.auth.service.AuthService
-import com.blog.blogbackend.domain.token.dto.Token
 import com.blog.blogbackend.domain.token.service.TokenService
 import com.blog.blogbackend.domain.user.entity.User
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -40,8 +42,9 @@ class AuthController(
     fun login(
         @Valid
         @RequestBody
-        loginReq: LoginReq
-    ): ResponseEntity<Token> {
+        loginReq: LoginReq,
+        response: HttpServletResponse
+    ): ResponseEntity<String> {
 
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken.unauthenticated(loginReq.email, loginReq.password)
@@ -49,7 +52,13 @@ class AuthController(
 
         val token = tokenService.createToken(authentication)
 
-        return ResponseEntity.ok(token)
+        val accessTokenCookie = Cookie("accessToken", token.accessToken)
+        val refreshTokenCookie = Cookie("refreshToken", token.refreshToken)
+
+        response.addCookie(accessTokenCookie)
+        response.addCookie(refreshTokenCookie)
+
+        return ResponseEntity.ok("로그인 성공")
     }
 
     @GetMapping("/me")
@@ -57,6 +66,6 @@ class AuthController(
         authentication: Authentication
     ): ResponseEntity<String> {
 
-        return ResponseEntity.ok("me")
+        return ResponseEntity.ok((authentication.principal as CustomUserDetails).username)
     }
 }
