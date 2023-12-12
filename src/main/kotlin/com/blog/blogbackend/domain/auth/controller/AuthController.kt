@@ -1,12 +1,13 @@
 package com.blog.blogbackend.domain.auth.controller
 
+import com.blog.blogbackend.common.utils.CookieFactory
+import com.blog.blogbackend.common.utils.CookieName
 import com.blog.blogbackend.domain.auth.dto.LoginReq
 import com.blog.blogbackend.domain.auth.dto.SignupReq
 import com.blog.blogbackend.domain.auth.entity.CustomUserDetails
 import com.blog.blogbackend.domain.auth.service.AuthService
 import com.blog.blogbackend.domain.token.service.TokenService
 import com.blog.blogbackend.domain.user.entity.User
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
@@ -52,8 +53,8 @@ class AuthController(
 
         val token = tokenService.createToken(authentication)
 
-        val accessTokenCookie = Cookie("accessToken", token.accessToken)
-        val refreshTokenCookie = Cookie("refreshToken", token.refreshToken)
+        val accessTokenCookie = CookieFactory.generateCookie(CookieName.ACCESS_TOKEN, token.accessToken)
+        val refreshTokenCookie = CookieFactory.generateCookie(CookieName.REFRESH_TOKEN, token.refreshToken)
 
         response.addCookie(accessTokenCookie)
         response.addCookie(refreshTokenCookie)
@@ -67,5 +68,23 @@ class AuthController(
     ): ResponseEntity<String> {
 
         return ResponseEntity.ok((authentication.principal as CustomUserDetails).username)
+    }
+
+    @GetMapping("/code")
+    fun code(
+        @RequestParam
+        accessToken: String,
+        @RequestParam
+        refreshToken: String,
+        response: HttpServletResponse
+    ) {
+
+        val accessTokenCookie = CookieFactory.generateCookie(CookieName.ACCESS_TOKEN, accessToken)
+        val refreshTokenCookie = CookieFactory.generateCookie(CookieName.REFRESH_TOKEN, refreshToken)
+
+        response.addCookie(accessTokenCookie)
+        response.addCookie(refreshTokenCookie)
+
+        response.sendRedirect("http://localhost:8080/api/auth/me")
     }
 }

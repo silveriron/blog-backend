@@ -1,12 +1,13 @@
 package com.blog.blogbackend.common.filter
 
+import com.blog.blogbackend.common.utils.CookieFactory
+import com.blog.blogbackend.common.utils.CookieName
 import com.blog.blogbackend.domain.auth.entity.CustomUserDetails
 import com.blog.blogbackend.domain.token.dto.Token
 import com.blog.blogbackend.domain.token.service.TokenService
 import com.blog.blogbackend.domain.user.service.UserService
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -43,7 +44,7 @@ class JwtAuthenticationFilter(
                     userService.findByRefreshToken(token.refreshToken)?.let {
                         val accessToken = tokenService.createAccessToken(it.id)
 
-                        val accessTokenCookie = Cookie("accessToken", accessToken)
+                        val accessTokenCookie = CookieFactory.generateCookie(CookieName.ACCESS_TOKEN, accessToken)
 
                         SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
                             CustomUserDetails(it),
@@ -63,8 +64,8 @@ class JwtAuthenticationFilter(
 
     private fun getJwtFromRequest(request: HttpServletRequest): Token {
 
-        val accessToken = request.cookies?.find { it.name == "accessToken" }?.value ?: ""
-        val refreshToken = request.cookies?.find { it.name == "refreshToken" }?.value ?: ""
+        val accessToken = request.cookies?.find { it.name == CookieName.ACCESS_TOKEN.name }?.value ?: ""
+        val refreshToken = request.cookies?.find { it.name == CookieName.REFRESH_TOKEN.name }?.value ?: ""
 
         return Token(accessToken, refreshToken)
 

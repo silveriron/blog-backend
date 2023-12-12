@@ -1,6 +1,7 @@
 package com.blog.blogbackend.common.config
 
 import com.blog.blogbackend.common.filter.JwtAuthenticationFilter
+import com.blog.blogbackend.common.handler.OAuth2SuccessHandler
 import com.blog.blogbackend.domain.auth.service.CustomUserDetailsService
 import com.blog.blogbackend.domain.token.service.TokenService
 import com.blog.blogbackend.domain.user.service.UserService
@@ -11,26 +12,29 @@ import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 class SecurityConfig(
     private val tokenService: TokenService,
-    private val userService: UserService
+    private val userService: UserService,
 ) {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .authorizeHttpRequests { it.requestMatchers("/api/auth/signup", "api/auth/login").permitAll()
+            .authorizeHttpRequests { it.requestMatchers("/api/auth/signup", "api/auth/login", "api/auth/code").permitAll()
                 .anyRequest().authenticated() }
             .addFilterBefore(
-                JwtAuthenticationFilter(tokenService, userService), UsernamePasswordAuthenticationFilter::class.java)
+                JwtAuthenticationFilter(tokenService, userService), OAuth2AuthorizationRequestRedirectFilter::class.java)
             .csrf { it.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .oauth2Login { it.successHandler(OAuth2SuccessHandler(tokenService)) }
 
         return http.build()
     }
