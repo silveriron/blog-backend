@@ -24,7 +24,7 @@ class AuthService(
         val user = User(
             email = signupReq.email,
             password = passwordEncoder.encode(signupReq.password),
-            name = signupReq.name,
+            username = signupReq.username,
             image = signupReq.image,
             role = UserRole.ROLE_USER,
             status = UserStatus.UNVERIFIED,

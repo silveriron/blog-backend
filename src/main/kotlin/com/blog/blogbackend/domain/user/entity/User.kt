@@ -23,6 +23,7 @@ data class User(
     @Enumerated(EnumType.STRING)
     val provider: AuthProvider,
     val providerId: String? = null,
+    var refreshToken: String? = null,
 
     @CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),

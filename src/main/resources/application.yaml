@@ -12,4 +12,5 @@ spring:
 
 jwt:
   secret: "fnlf93jfilfjkl23u930232hi4o3hofjou902ur9203rj23oknr2342yh34792u90f2fkl2n39ory79fy80923jnklnr32kl"
-  expiration-seconds: 86400
+  access-token-expiration-seconds: 86400
+  refresh-token-expiration-seconds: 604800
