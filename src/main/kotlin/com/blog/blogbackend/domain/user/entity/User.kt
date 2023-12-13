@@ -1,5 +1,6 @@
 package com.blog.blogbackend.domain.user.entity
 
+import com.blog.blogbackend.domain.article.entity.Article
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -24,6 +25,9 @@ data class User(
     val provider: AuthProvider,
     val providerId: String? = null,
     var refreshToken: String? = null,
+
+    @OneToMany
+    var articleList: List<Article>? = null,
 
     @CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),

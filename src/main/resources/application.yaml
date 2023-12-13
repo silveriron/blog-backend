@@ -1,16 +1,30 @@
 spring:
+
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: admin
     url: jdbc:postgresql://localhost:5432/blog
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${client-id}
+            client-secret: ${client-secret}
+            scope:
+              - email
+              - profile
 
 jwt:
   secret: "fnlf93jfilfjkl23u930232hi4o3hofjou902ur9203rj23oknr2342yh34792u90f2fkl2n39ory79fy80923jnklnr32kl"
-  access-token-expiration-seconds: 86400
+#  1일
+  access-token-expiration-seconds: 3600
+#  7일
   refresh-token-expiration-seconds: 604800
