@@ -4,6 +4,7 @@ import com.blog.blogbackend.common.utils.CookieFactory
 import com.blog.blogbackend.common.utils.CookieName
 import com.blog.blogbackend.domain.auth.dto.LoginReq
 import com.blog.blogbackend.domain.auth.dto.SignupReq
+import com.blog.blogbackend.domain.auth.dto.UpdateReq
 import com.blog.blogbackend.domain.auth.entity.CustomUserDetails
 import com.blog.blogbackend.domain.auth.service.AuthService
 import com.blog.blogbackend.domain.token.service.TokenService
@@ -17,7 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users")
 @RestController
 class AuthController(
     private val authService: AuthService,
@@ -27,7 +28,7 @@ class AuthController(
 
     private val logger = LoggerFactory.getLogger(AuthController::class.java)
 
-    @PostMapping("/signup")
+    @PostMapping("/")
     fun signup(
         @Valid
         @RequestBody
@@ -62,12 +63,27 @@ class AuthController(
         return ResponseEntity.ok("로그인 성공")
     }
 
-    @GetMapping("/me")
+    @GetMapping("/")
     fun me(
         authentication: Authentication
-    ): ResponseEntity<String> {
+    ): ResponseEntity<User> {
 
-        return ResponseEntity.ok((authentication.principal as CustomUserDetails).username)
+        return ResponseEntity.ok((authentication.principal as CustomUserDetails).getUser())
+    }
+
+    @PutMapping("/")
+    fun update(
+        authentication: Authentication,
+        @Valid
+        @RequestBody
+        updateReq: UpdateReq
+    ): ResponseEntity<User> {
+
+          val user = authService.update(authentication, updateReq)
+
+          logger.info("user: $user")
+
+        return ResponseEntity.ok(user)
     }
 
     @GetMapping("/code")

@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/auth/login
+POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
@@ -7,13 +7,23 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/api/auth/signup
+POST http://localhost:8080/api/users/
 Content-Type: application/json
 
 {
   "email": "test@test.com",
   "password": "12345678",
   "username": "test"
+}
+
+###
+PUT http://localhost:8080/api/users/
+Content-Type: application/json
+
+{
+  "username": "test2",
+  "bio": "test bio",
+  "image": "test image"
 }
 
 ###

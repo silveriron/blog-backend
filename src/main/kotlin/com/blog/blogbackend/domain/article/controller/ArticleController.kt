@@ -15,6 +15,4 @@ class ArticleController(
   @GetMapping("/articles")
   fun getArticles(@RequestParam offset: Int, @RequestParam limit: Int) = articleService.getArticles(offset, limit)
 
-
-
 }

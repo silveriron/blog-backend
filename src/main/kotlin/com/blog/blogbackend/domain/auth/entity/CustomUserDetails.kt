@@ -27,6 +27,10 @@ class CustomUserDetails(
         return user.id
     }
 
+    fun getUser(): User {
+        return user
+    }
+
     override fun getPassword(): String {
         return user.password
     }
