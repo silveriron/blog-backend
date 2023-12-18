@@ -1,6 +1,7 @@
 package com.blog.blogbackend.common.config
 
 import com.blog.blogbackend.common.filter.JwtAuthenticationFilter
+import com.blog.blogbackend.common.handler.CustomAuthenticationEntryPoint
 import com.blog.blogbackend.common.handler.OAuth2SuccessHandler
 import com.blog.blogbackend.domain.auth.service.CustomUserDetailsService
 import com.blog.blogbackend.domain.token.service.TokenService
@@ -28,12 +29,13 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .authorizeHttpRequests { it.requestMatchers("/api/users/", "api/users/login", "api/users/code").permitAll()
+            .authorizeHttpRequests { it.requestMatchers("api/users/login", "api/users/code").permitAll()
                 .anyRequest().authenticated() }
             .addFilterBefore(
                 JwtAuthenticationFilter(tokenService, userService), OAuth2AuthorizationRequestRedirectFilter::class.java)
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .exceptionHandling {it.authenticationEntryPoint(CustomAuthenticationEntryPoint())}
             .oauth2Login { it.successHandler(OAuth2SuccessHandler(tokenService)) }
 
         return http.build()

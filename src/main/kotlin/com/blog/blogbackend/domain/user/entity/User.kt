@@ -1,6 +1,5 @@
 package com.blog.blogbackend.domain.user.entity
 
-import com.blog.blogbackend.domain.article.entity.Article
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -32,9 +31,6 @@ data class User(
     val providerId: String? = null,
     @JsonIgnore
     var refreshToken: String? = null,
-
-    @OneToMany
-    var articleList: List<Article>? = null,
 
     @CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),

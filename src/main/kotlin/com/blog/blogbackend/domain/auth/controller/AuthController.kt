@@ -5,10 +5,10 @@ import com.blog.blogbackend.common.utils.CookieName
 import com.blog.blogbackend.domain.auth.dto.LoginReq
 import com.blog.blogbackend.domain.auth.dto.SignupReq
 import com.blog.blogbackend.domain.auth.dto.UpdateReq
+import com.blog.blogbackend.domain.auth.dto.UserRes
 import com.blog.blogbackend.domain.auth.entity.CustomUserDetails
 import com.blog.blogbackend.domain.auth.service.AuthService
 import com.blog.blogbackend.domain.token.service.TokenService
-import com.blog.blogbackend.domain.user.entity.User
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
@@ -33,11 +33,11 @@ class AuthController(
         @Valid
         @RequestBody
         signupReq: SignupReq
-    ): ResponseEntity<User> {
+    ): ResponseEntity<UserRes> {
 
         val user = authService.signup(signupReq)
 
-        return ResponseEntity.ok(user)
+        return ResponseEntity.ok(UserRes(user))
     }
 
     @PostMapping("/login")
@@ -46,7 +46,7 @@ class AuthController(
         @RequestBody
         loginReq: LoginReq,
         response: HttpServletResponse
-    ): ResponseEntity<String> {
+    ): ResponseEntity<UserRes> {
 
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken.unauthenticated(loginReq.email, loginReq.password)
@@ -60,15 +60,19 @@ class AuthController(
         response.addCookie(accessTokenCookie)
         response.addCookie(refreshTokenCookie)
 
-        return ResponseEntity.ok("로그인 성공")
+        val user = authentication.principal as CustomUserDetails
+
+        return ResponseEntity.ok(UserRes(user.getUser()))
     }
 
     @GetMapping("/")
     fun me(
         authentication: Authentication
-    ): ResponseEntity<User> {
+    ): ResponseEntity<UserRes> {
 
-        return ResponseEntity.ok((authentication.principal as CustomUserDetails).getUser())
+        val user = authentication.principal as CustomUserDetails
+
+        return ResponseEntity.ok(UserRes(user.getUser()))
     }
 
     @PutMapping("/")
@@ -77,13 +81,13 @@ class AuthController(
         @Valid
         @RequestBody
         updateReq: UpdateReq
-    ): ResponseEntity<User> {
+    ): ResponseEntity<UserRes> {
 
           val user = authService.update(authentication, updateReq)
 
           logger.info("user: $user")
 
-        return ResponseEntity.ok(user)
+        return ResponseEntity.ok(UserRes(user))
     }
 
     @GetMapping("/code")
@@ -101,6 +105,6 @@ class AuthController(
         response.addCookie(accessTokenCookie)
         response.addCookie(refreshTokenCookie)
 
-        response.sendRedirect("http://localhost:8080/api/auth/me")
+        response.sendRedirect("http://localhost:8080/api/users")
     }
 }

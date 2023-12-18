@@ -19,7 +19,7 @@ class OAuth2SuccessHandler(
     ) {
         val token = tokenService.createToken(authentication)
 
-        response.sendRedirect("http://localhost:8080/api/auth/code?accessToken=${token.accessToken}&refreshToken=${token.refreshToken}")
+        response.sendRedirect("http://localhost:8080/api/users/code?accessToken=${token.accessToken}&refreshToken=${token.refreshToken}")
 
     }
 }
