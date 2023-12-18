@@ -14,6 +14,8 @@ class UserService(
 
     fun save(user: User) = userRepository.save(user)
     fun findByUserId(userId: Long) = userRepository.findById(userId)
+
+    fun findByUsername(username: String) = userRepository.findByUsername(username)
     fun findByProviderAndProviderId(provider: AuthProvider, providerId: String) = userRepository.findByProviderAndProviderId(provider, providerId)
     fun findByRefreshToken(refreshToken: String) = userRepository.findByRefreshToken(refreshToken)
 }

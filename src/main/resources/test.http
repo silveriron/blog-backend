@@ -2,7 +2,7 @@ POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
+    "email": "test2@test.com",
       "password": "12345678"
 }
 
@@ -11,9 +11,9 @@ POST http://localhost:8080/api/users/
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "test2@test.com",
   "password": "12345678",
-  "username": "test"
+  "username": "test222"
 }
 
 ###
@@ -21,11 +21,17 @@ PUT http://localhost:8080/api/users/
 Content-Type: application/json
 
 {
-  "username": "test2",
-  "bio": "test bio",
-  "image": "test image"
+  "username": "test2211",
+  "bio": "test bio23",
+  "image": "test image231"
 }
 
 ###
-GET http://localhost:8080/api/auth/me
+GET http://localhost:8080/api/users/
+
+###
+GET http://localhost:8080/api/articles?limit=20&offset=0
+
+###
+GET http://localhost:8080/api/profiles/test2211
 
