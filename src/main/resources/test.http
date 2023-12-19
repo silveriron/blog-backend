@@ -35,3 +35,9 @@ GET http://localhost:8080/api/articles?limit=20&offset=0
 ###
 GET http://localhost:8080/api/profiles/test2211
 
+###
+POST http://localhost:8080/api/profiles/test22/follow
+
+###
+DELETE http://localhost:8080/api/profiles/test22/follow
+

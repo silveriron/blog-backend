@@ -30,6 +30,7 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .authorizeHttpRequests { it.requestMatchers("api/users/login", "api/users/code", "/api/profiles/{username}").permitAll()
+                .requestMatchers("api/profiles/{username}/follow", "api/profiles/{username}/unfollow").authenticated()
                 .anyRequest().authenticated() }
             .addFilterBefore(
                 JwtAuthenticationFilter(tokenService, userService), OAuth2AuthorizationRequestRedirectFilter::class.java)
