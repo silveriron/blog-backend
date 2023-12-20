@@ -1,16 +1,26 @@
 package com.blog.blogbackend.domain.article.service
 
+import com.blog.blogbackend.domain.article.dto.CreateArticleDto
 import com.blog.blogbackend.domain.article.dto.UpdateArticleDto
 import com.blog.blogbackend.domain.article.entity.Article
 import com.blog.blogbackend.domain.article.repository.ArticleRepository
+import com.blog.blogbackend.domain.tag.service.TagService
+import com.blog.blogbackend.domain.user.entity.User
 import org.springframework.stereotype.Service
 
 @Service
 class ArticleService(
-    private val articleRepository: ArticleRepository
+    private val articleRepository: ArticleRepository,
+    private val tagService: TagService
 ) {
 
-    fun getArticles(offset: Int = 0, limit: Int = 20): List<Article> {
+    fun getArticles(offset: Int = 0,
+                    limit: Int = 20,
+                    tag: String?,
+                    author: String?,
+                    favorited: String?
+    ): List<Article> {
+
         return articleRepository.findAll().subList(offset, offset + limit)
     }
 
@@ -18,7 +28,17 @@ class ArticleService(
         return articleRepository.findBySlug(slug)
     }
 
-    fun createArticle(article: Article): Article {
+    fun createArticle(createArticleDto: CreateArticleDto, user: User): Article {
+        val tagList = createArticleDto.tagList.map { tagService.createTag(it) }
+        val article = Article(
+            slug = createArticleDto.title,
+            title = createArticleDto.title,
+            description = createArticleDto.description,
+            body = createArticleDto.body,
+            tagList = tagList,
+            author = user
+        )
+
         return articleRepository.save(article)
     }
 
@@ -34,5 +54,13 @@ class ArticleService(
 
     fun deleteArticle(slug: String): Boolean {
         return articleRepository.deleteBySlug(slug)
+    }
+
+    fun getArticlesCount(
+        tag: String?,
+        author: String?,
+        favorited: String?
+    ): Int {
+        return articleRepository.findAll().size
     }
 }

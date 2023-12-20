@@ -16,14 +16,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity(debug = true)
 class SecurityConfig(
     private val tokenService: TokenService,
     private val userService: UserService,
+
 ) {
 
     @Bean
@@ -33,8 +34,8 @@ class SecurityConfig(
                 .requestMatchers("api/profiles/{username}/follow", "api/profiles/{username}/unfollow").authenticated()
                 .anyRequest().authenticated() }
             .addFilterBefore(
-                JwtAuthenticationFilter(tokenService, userService), OAuth2AuthorizationRequestRedirectFilter::class.java)
-            .csrf { it.disable() }
+                JwtAuthenticationFilter(tokenService, userService), UsernamePasswordAuthenticationFilter::class.java)
+            .csrf { it -> it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling {it.authenticationEntryPoint(CustomAuthenticationEntryPoint())}
             .oauth2Login { it.successHandler(OAuth2SuccessHandler(tokenService)) }
@@ -54,7 +55,6 @@ class SecurityConfig(
 
         return ProviderManager(daoAuthenticationProvider)
     }
-
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {

@@ -2,6 +2,7 @@ package com.blog.blogbackend.domain.auth.entity
 
 import com.blog.blogbackend.domain.user.entity.User
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.core.user.OAuth2User
 
@@ -17,9 +18,9 @@ class CustomUserDetails(
         return attributes!!
     }
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+    override fun getAuthorities(): MutableCollection<GrantedAuthority> {
         val authorities = mutableListOf<GrantedAuthority>()
-        authorities.add(GrantedAuthority { user.role.name })
+        authorities.add(SimpleGrantedAuthority(user.role.name))
         return authorities
     }
 

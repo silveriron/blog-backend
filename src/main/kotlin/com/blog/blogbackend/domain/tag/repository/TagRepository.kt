@@ -4,4 +4,5 @@ import com.blog.blogbackend.domain.tag.entity.Tag
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface TagRepository: JpaRepository<Tag, Long> {
+    fun findByName(tag: String): Tag?
 }

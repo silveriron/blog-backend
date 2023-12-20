@@ -41,3 +41,13 @@ POST http://localhost:8080/api/profiles/test22/follow
 ###
 DELETE http://localhost:8080/api/profiles/test22/follow
 
+###
+POST http://localhost:8080/api/articles
+Content-Type: application/json
+
+{
+  "title": "How to train your dragon3",
+  "description": "Ever wonder how?",
+  "body": "You have to believe",
+  "tagList": ["reactjs"]
+}
