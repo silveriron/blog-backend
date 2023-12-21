@@ -1,6 +1,5 @@
 package com.blog.blogbackend.domain.article.entity
 
-import com.blog.blogbackend.domain.tag.entity.Tag
 import com.blog.blogbackend.domain.user.entity.User
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -17,12 +16,6 @@ data class Article(
     var title: String,
     var description: String,
     var body: String,
-
-    @OneToMany
-    var tagList: List<Tag>,
-
-    @OneToMany
-    var favoriteUserList: List<User>? = null,
 
     @ManyToOne
     var author: User,

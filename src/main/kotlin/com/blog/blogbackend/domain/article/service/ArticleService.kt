@@ -29,13 +29,12 @@ class ArticleService(
     }
 
     fun createArticle(createArticleDto: CreateArticleDto, user: User): Article {
-        val tagList = createArticleDto.tagList.map { tagService.createTag(it) }
+        createArticleDto.tagList.map { tagService.createTag(it) }
         val article = Article(
             slug = createArticleDto.title,
             title = createArticleDto.title,
             description = createArticleDto.description,
             body = createArticleDto.body,
-            tagList = tagList,
             author = user
         )
 

@@ -46,7 +46,7 @@ POST http://localhost:8080/api/articles
 Content-Type: application/json
 
 {
-  "title": "How to train your dragon3",
+  "title": "How to train your dragon4",
   "description": "Ever wonder how?",
   "body": "You have to believe",
   "tagList": ["reactjs"]
