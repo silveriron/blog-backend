@@ -73,11 +73,5 @@ class JwtAuthenticationFilter(
         val refreshToken = request.cookies?.find { it.name == CookieName.REFRESH_TOKEN.name }?.value ?: ""
 
         return Token(accessToken, refreshToken)
-
-//        val bearerToken = request.getHeader("Authorization")
-//        if (bearerToken != null && bearerToken.isNotEmpty() && bearerToken.startsWith("Bearer ")) {
-//            return bearerToken.substring(7)
-//        }
-//        return null
     }
 }
