@@ -1,5 +1,6 @@
 package com.blog.blogbackend.domain.article.entity
 
+import com.blog.blogbackend.domain.articleTag.entity.ArticleTag
 import com.blog.blogbackend.domain.user.entity.User
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -20,6 +21,8 @@ data class Article(
     @ManyToOne
     var author: User,
 
+    @OneToMany(mappedBy = "article")
+    var articleTags: MutableList<ArticleTag> = mutableListOf(),
     @CreatedDate
     val createdAt: LocalDateTime? = LocalDateTime.now(),
     @LastModifiedDate

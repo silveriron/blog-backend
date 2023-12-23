@@ -1,9 +1,7 @@
 package com.blog.blogbackend.domain.tag.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.blog.blogbackend.domain.articleTag.entity.ArticleTag
+import jakarta.persistence.*
 
 @Entity
 data class Tag(
@@ -11,4 +9,6 @@ data class Tag(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
     val name: String,
+    @OneToMany(mappedBy = "tag")
+    val articleTags: List<ArticleTag> = listOf(),
 )
